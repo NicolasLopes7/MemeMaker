@@ -36,9 +36,13 @@ export const Templates = styled.div`
   margin-bottom: 30px;
 
   button {
-    border: 0;
     background: transparent;
+    border: 2px solid transparent;
     margin-right: 10px;
+
+    &.selected {
+      border-color: #4395db;
+    }
 
     img {
       width: 53px;
@@ -68,6 +72,7 @@ export const Button = styled.button`
   background: #4395db;
   font-weight: bold;
   transition: background 0.2s ease-in;
+
   &:hover {
     background: #3672a3;
   }

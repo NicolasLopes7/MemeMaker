@@ -8,9 +8,13 @@ export default function Home() {
     id: number;
     url: string;
     name: string;
-    count: number;
+    box_count: number;
   }
   const [templates, setTemplates] = useState<TemplateInterface[]>([]);
+  const [
+    selectedTemplate,
+    setSelectedTemplate,
+  ] = useState<TemplateInterface | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -29,15 +33,31 @@ export default function Home() {
         <h2>Select a template</h2>
         <Templates>
           {templates.map((template) => (
-            <button key={template.id} type="button">
+            <button
+              key={template.id}
+              type="button"
+              onClick={() => setSelectedTemplate(template)}
+              className={template.id === selectedTemplate?.id ? "selected" : ""}
+            >
               <img src={template.url} alt={template.name} />
             </button>
           ))}
         </Templates>
-        <h2>Texts</h2>
-        <Form>
-          <input placeholder="Texto" />
-        </Form>
+        {selectedTemplate && (
+          <>
+            <h2>Texts</h2>
+            <Form>
+              {new Array(selectedTemplate.box_count)
+                .fill("")
+                .map((_, index) => (
+                  <input
+                    key={String(Math.random())}
+                    placeholder={`Text #${index}`}
+                  />
+                ))}
+            </Form>
+          </>
+        )}
         <Button type="submit">Make My Meme!</Button>
       </Card>
     </Wrapper>
