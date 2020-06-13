@@ -16,6 +16,26 @@ export default function Home() {
     setSelectedTemplate,
   ] = useState<TemplateInterface | null>(null);
 
+  const [boxes, setBoxes] = useState<string[]>([]);
+
+  const handleInputChange = (index: number) => (
+    e: React.FormEvent<HTMLInputElement>
+  ) => {
+    const newValues = boxes;
+    newValues[index] = e.currentTarget.value;
+    setBoxes(newValues);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(boxes);
+  };
+
+  const handleSelectTemplate = (template: TemplateInterface) => {
+    setSelectedTemplate(template);
+    setBoxes([]);
+  };
+
   useEffect(() => {
     (async () => {
       const response = await api.get("/get_memes");
@@ -36,7 +56,7 @@ export default function Home() {
             <button
               key={template.id}
               type="button"
-              onClick={() => setSelectedTemplate(template)}
+              onClick={() => handleSelectTemplate(template)}
               className={template.id === selectedTemplate?.id ? "selected" : ""}
             >
               <img src={template.url} alt={template.name} />
@@ -46,19 +66,20 @@ export default function Home() {
         {selectedTemplate && (
           <>
             <h2>Texts</h2>
-            <Form>
+            <Form onSubmit={handleSubmit}>
               {new Array(selectedTemplate.box_count)
                 .fill("")
                 .map((_, index) => (
                   <input
                     key={String(Math.random())}
-                    placeholder={`Text #${index}`}
+                    placeholder={`Text #${index + 1}`}
+                    onChange={handleInputChange(index)}
                   />
                 ))}
+              <Button type="submit">Make My Meme!</Button>
             </Form>
           </>
         )}
-        <Button type="submit">Make My Meme!</Button>
       </Card>
     </Wrapper>
   );
